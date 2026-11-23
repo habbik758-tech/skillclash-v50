@@ -1,0 +1,8 @@
+{
+  "name": "SkillClash",
+  "description": "Competitive mobile esports tournament platform with battle royale, clash squad, private contests, live wallet, referrals, and player leaderboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

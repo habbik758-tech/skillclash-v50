@@ -1,0 +1,439 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Player or admin account profile, game identifiers, wallet buckets, and match statistics.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "firstName": { "type": "string", "minLength": 0, "maxLength": 60 },
+        "lastName": { "type": "string", "minLength": 0, "maxLength": 60 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "email": { "type": "string", "format": "email", "maxLength": 120 },
+        "countryCode": { "type": "string", "maxLength": 8 },
+        "mobile": { "type": "string", "maxLength": 20 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "savedGameName": { "type": "string", "maxLength": 40 },
+        "savedGameUid": { "type": "string", "pattern": "^[0-9]{0,14}$", "maxLength": 14 },
+        "role": { "type": "string", "enum": ["player", "admin"] },
+        "status": { "type": "string", "enum": ["Active", "Banned"] },
+        "balance": { "type": "number" },
+        "depositedBalance": { "type": "number" },
+        "winningBalance": { "type": "number" },
+        "bonusBalance": { "type": "number" },
+        "coins": { "type": "number" },
+        "payoutsCount": { "type": "integer" },
+        "totalWithdrawals": { "type": "number" },
+        "matchesPlayed": { "type": "integer" },
+        "totalKilled": { "type": "integer" },
+        "amountWon": { "type": "number" },
+        "winRate": { "type": "number" },
+        "darkMode": { "type": "boolean" },
+        "language": { "type": "string", "enum": ["en", "hi"] },
+        "dateOfBirth": { "type": "string", "maxLength": 20 },
+        "gender": { "type": "string", "enum": ["Male", "Female"] },
+        "avatarPreset": { "type": "string", "maxLength": 30 },
+        "avatarUrl": { "type": "string", "maxLength": 1000 },
+        "referralCode": { "type": "string", "maxLength": 30 },
+        "myReferralCode": { "type": "string", "maxLength": 30 },
+        "referredCount": { "type": "integer" },
+        "referralEarnings": { "type": "number" },
+        "rankTitle": { "type": "string", "maxLength": 40 },
+        "level": { "type": "integer" },
+        "luckyDrawLastSpinAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "email", "role", "status", "balance", "depositedBalance", "winningBalance"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Verified admin and staff registry.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["Super Admin", "Match Host", "Result Manager", "Payout Admin"] },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "status"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "Tournament or private contest match details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "categoryId": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "game": { "type": "string", "maxLength": 60 },
+        "mode": { "type": "string", "maxLength": 80 },
+        "map": { "type": "string", "maxLength": 40 },
+        "teamType": { "type": "string", "enum": ["Solo", "Duo", "Squad", "1v1", "2v2", "4v4"] },
+        "bannerUrl": { "type": "string", "maxLength": 1000 },
+        "entryFee": { "type": "number" },
+        "prizePool": { "type": "number" },
+        "perKill": { "type": "number" },
+        "rank1Prize": { "type": "number" },
+        "rank2Prize": { "type": "number" },
+        "rank3Prize": { "type": "number" },
+        "slotsFilled": { "type": "integer" },
+        "slotsTotal": { "type": "integer" },
+        "takenPositions": { "type": "array" },
+        "scheduleTime": { "type": "string", "maxLength": 60 },
+        "roomRevealTime": { "type": "string", "maxLength": 60 },
+        "status": { "type": "string", "enum": ["Upcoming", "Live", "Ongoing", "Completed", "Cancelled", "UPCOMING", "ONGOING", "RESULTS"] },
+        "published": { "type": "boolean" },
+        "resultsPublished": { "type": "boolean" },
+        "resultsStatus": { "type": "string", "enum": ["NONE", "DRAFT", "PUBLISHED"] },
+        "winnerName": { "type": "string", "maxLength": 60 },
+        "winnerUid": { "type": "string", "maxLength": 128 },
+        "winnerPrizeStatus": { "type": "string", "enum": ["Pending", "Credited"] },
+        "isPrivate": { "type": "boolean" },
+        "inviteCode": { "type": "string", "maxLength": 30 },
+        "hostUid": { "type": "string", "maxLength": 128 },
+        "hostUsername": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "mode", "map", "entryFee", "prizePool", "slotsTotal", "status", "published"]
+    },
+    "RoomSecret": {
+      "title": "RoomSecret",
+      "description": "Protected room credentials for joined match participants and admins.",
+      "type": "object",
+      "properties": {
+        "roomId": { "type": "string", "maxLength": 60 },
+        "roomPassword": { "type": "string", "maxLength": 60 },
+        "roomRevealTime": { "type": "string", "maxLength": 60 },
+        "hostUid": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["roomId", "roomPassword"]
+    },
+    "MatchParticipant": {
+      "title": "MatchParticipant",
+      "description": "Joined player slot record for a tournament match.",
+      "type": "object",
+      "properties": {
+        "matchId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "matchCode": { "type": "string", "maxLength": 40 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "inGameName": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "uid": { "type": "string", "pattern": "^[0-9]{6,14}$", "maxLength": 14 },
+        "position": { "type": "integer" },
+        "entryFeePaid": { "type": "number" },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "userId", "username", "inGameName", "uid", "position", "entryFeePaid", "joinedAt"]
+    },
+    "MatchResult": {
+      "title": "MatchResult",
+      "description": "Published or draft participant match result row.",
+      "type": "object",
+      "properties": {
+        "matchId": { "type": "string", "maxLength": 128 },
+        "matchTitle": { "type": "string", "maxLength": 120 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 40 },
+        "inGameName": { "type": "string", "maxLength": 40 },
+        "rank": { "type": "integer" },
+        "kills": { "type": "integer" },
+        "perKillPayout": { "type": "number" },
+        "rankBonus": { "type": "number" },
+        "totalWinning": { "type": "number" },
+        "entryFeePaid": { "type": "number" },
+        "prizeStatus": { "type": "string", "enum": ["Pending", "Credited"] },
+        "published": { "type": "boolean" },
+        "dateTime": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "rank", "kills", "totalWinning", "published"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Platform announcement or alert.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "body": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "category": { "type": "string", "maxLength": 40 },
+        "date": { "type": "string", "maxLength": 40 },
+        "pinned": { "type": "boolean" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "body", "active"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "User wallet ledger transaction.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "type": { "type": "string", "enum": ["DEPOSIT", "WITHDRAW", "ENTRY_FEE", "WINNING", "BONUS"] },
+        "amount": { "type": "number" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "upiOrRef": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "method": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["PENDING", "SUCCESS", "REJECTED"] },
+        "matchId": { "type": "string", "maxLength": 128 },
+        "withdrawalId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "amount", "title", "upiOrRef", "status", "createdAt"]
+    },
+    "WithdrawalRequest": {
+      "title": "WithdrawalRequest",
+      "description": "Player withdrawal request.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "amount": { "type": "number" },
+        "upiId": { "type": "string", "minLength": 5, "maxLength": 80 },
+        "method": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "amount", "upiId", "status", "createdAt"]
+    },
+    "PublicWithdrawal": {
+      "title": "PublicWithdrawal",
+      "description": "PII-free approved withdrawal ticker entry.",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "maxLength": 40 },
+        "amount": { "type": "number" },
+        "verified": { "type": "boolean" },
+        "timeAgo": { "type": "string", "maxLength": 30 },
+        "avatarUrl": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "amount", "verified"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "PII-free public top player ranking.",
+      "type": "object",
+      "properties": {
+        "rank": { "type": "integer" },
+        "username": { "type": "string", "maxLength": 40 },
+        "matches": { "type": "integer" },
+        "totalKilled": { "type": "integer" },
+        "kills": { "type": "integer" },
+        "amountWon": { "type": "number" },
+        "winnings": { "type": "number" },
+        "tier": { "type": "string", "maxLength": 30 },
+        "avatarUrl": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["username"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Tournament game category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 80 },
+        "slug": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "maxLength": 60 },
+        "shortTag": { "type": "string", "maxLength": 60 },
+        "accentGradient": { "type": "string", "maxLength": 120 },
+        "artVariant": { "type": "string", "enum": ["battle", "headshot", "yellow", "promo"] },
+        "badgeLabel": { "type": "string", "maxLength": 40 },
+        "isPrivateContest": { "type": "boolean" }
+      },
+      "required": ["slug", "title"]
+    },
+    "Game": {
+      "title": "Game",
+      "description": "Admin-managed game and mode configuration.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 60 },
+        "status": { "type": "string", "enum": ["Active", "Maintenance"] }
+      },
+      "required": ["name", "status"]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Home promo banner.",
+      "type": "object",
+      "properties": {
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "badgeText": { "type": "string", "maxLength": 60 },
+        "title": { "type": "string", "maxLength": 100 },
+        "subtitle": { "type": "string", "maxLength": 160 },
+        "targetMatchId": { "type": "string", "maxLength": 128 },
+        "active": { "type": "boolean" }
+      },
+      "required": ["imageUrl", "active"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Player customer support ticket and admin reply.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "subject": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "message": { "type": "string", "minLength": 4, "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["Open", "Resolved"] },
+        "adminReply": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "subject", "message", "status", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Broadcast notification log.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 140 },
+        "body": { "type": "string", "maxLength": 600 },
+        "targetUserId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "body"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Admin audit log.",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 120 },
+        "category": { "type": "string", "maxLength": 40 },
+        "details": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "action"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Player feedback rating and comment.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "rating": { "type": "integer" },
+        "comment": { "type": "string", "minLength": 4, "maxLength": 160 },
+        "avatarUrl": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "rating", "comment", "createdAt"]
+    },
+    "PromoSubmission": {
+      "title": "PromoSubmission",
+      "description": "Creator YouTube Shorts promo submission.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "username": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "videoUrl": { "type": "string", "pattern": "^https://", "maxLength": 200 },
+        "channelName": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "status": { "type": "string", "enum": ["UNDER_REVIEW", "APPROVED", "REJECTED"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "videoUrl", "channelName", "status", "createdAt"]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "description": "Platform configuration and theme settings.",
+      "type": "object",
+      "properties": {
+        "maintenanceMode": { "type": "boolean" },
+        "registrationsEnabled": { "type": "boolean" },
+        "minWithdrawal": { "type": "number" },
+        "upiLabel": { "type": "string", "maxLength": 80 },
+        "merchantUpiId": { "type": "string", "maxLength": 80 },
+        "primaryColor": { "type": "string", "maxLength": 30 }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles, wallet balances, and match statistics."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Admin and staff registry."
+    },
+    "/matches/{matchId}": {
+      "schema": { "$ref": "#/entities/Match" },
+      "description": "Published tournaments and private contests."
+    },
+    "/matches/{matchId}/secrets/room": {
+      "schema": { "$ref": "#/entities/RoomSecret" },
+      "description": "Protected room ID and password revealed only to joined participants and admins."
+    },
+    "/matchParticipants/{participantId}": {
+      "schema": { "$ref": "#/entities/MatchParticipant" },
+      "description": "Joined players per match keyed by {matchId}_{userId}."
+    },
+    "/matchResults/{resultId}": {
+      "schema": { "$ref": "#/entities/MatchResult" },
+      "description": "Participant match results and prize statuses."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Platform announcements."
+    },
+    "/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "User wallet ledger entries."
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": { "$ref": "#/entities/WithdrawalRequest" },
+      "description": "Player UPI/Paytm/Bank withdrawal requests."
+    },
+    "/publicWithdrawals/{tickerId}": {
+      "schema": { "$ref": "#/entities/PublicWithdrawal" },
+      "description": "PII-free approved withdrawal ticker."
+    },
+    "/leaderboard/{entryId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "PII-free top players leaderboard."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Tournament categories."
+    },
+    "/games/{gameId}": {
+      "schema": { "$ref": "#/entities/Game" },
+      "description": "Admin-managed games."
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Home and promo banners."
+    },
+    "/tickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Player support tickets."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Broadcast notifications."
+    },
+    "/activityLog/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Admin audit logs."
+    },
+    "/feedbacks/{feedbackId}": {
+      "schema": { "$ref": "#/entities/Feedback" },
+      "description": "Player ratings and comments."
+    },
+    "/promoSubmissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/PromoSubmission" },
+      "description": "Creator YouTube Shorts submissions."
+    },
+    "/appSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/AppSetting" },
+      "description": "Platform control and theme documents."
+    }
+  }
+}
